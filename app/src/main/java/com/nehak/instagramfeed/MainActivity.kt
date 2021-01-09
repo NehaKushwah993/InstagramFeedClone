@@ -2,12 +2,14 @@ package com.nehak.instagramfeed
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.nehak.instagramfeed.R
+import androidx.databinding.DataBindingUtil
+import com.nehak.instagramfeed.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
 }
