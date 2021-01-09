@@ -25,7 +25,7 @@ class FeedAdapter : ListAdapter<FeedItem, FeedViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         return FeedViewHolder(
-            ItemFeedBinding.inflate(LayoutInflater.from(parent.context))
+            ItemFeedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         );
     }
 

@@ -10,21 +10,21 @@ import com.nehak.instagramfeed.databinding.FragmentFeedListBinding
 
 class FeedListFragment : Fragment() {
 
+    lateinit var binding : FragmentFeedListBinding;
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return DataBindingUtil.inflate<FragmentFeedListBinding>(
-            inflater,
-            R.layout.fragment_feed_list,
-            container,
-            false
-        ).root
+        binding = FragmentFeedListBinding.inflate(inflater, container, false);
+        return binding.root;
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        val feedAdapter = FeedAdapter()
+        binding.adapter = feedAdapter
     }
 }
