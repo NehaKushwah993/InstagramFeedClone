@@ -14,6 +14,7 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.nehak.instagramfeed.R;
 
 /**
+ * Create By Neha Kushwah
  * In order to remove blackish views from player, we extends this remove them manually
  */
 public class CustomExoPlayerView extends PlayerView {

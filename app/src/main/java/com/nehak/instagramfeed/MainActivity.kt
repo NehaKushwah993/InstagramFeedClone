@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-private fun <E> ArrayList<E>.toStringArray(): ArrayList<String>? {
+private fun <E> ArrayList<E>.toStringArray(): ArrayList<String> {
 
     val arr = ArrayList<String>();
     forEach {

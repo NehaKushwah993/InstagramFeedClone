@@ -15,6 +15,9 @@ import com.nehak.instagramfeed.dataModels.FeedItem
 import com.nehak.instagramfeed.databinding.ItemFeedBinding
 
 
+/**
+ * Create By Neha Kushwah
+ */
 class FeedAdapter(val context: Context) : ListAdapter<FeedItem, FeedViewHolder>(DIFF_CALLBACK) {
 
     companion object {

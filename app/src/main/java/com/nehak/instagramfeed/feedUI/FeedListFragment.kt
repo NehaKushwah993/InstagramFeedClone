@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import com.nehak.instagramfeed.autoPlay.VideoAutoPlayHelper
 import com.nehak.instagramfeed.databinding.FragmentFeedListBinding
 
+/**
+ * Create By Neha Kushwah
+ */
 class FeedListFragment : Fragment() {
 
     lateinit var binding: FragmentFeedListBinding;
