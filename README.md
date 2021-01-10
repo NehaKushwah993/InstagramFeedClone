@@ -1,4 +1,4 @@
-# InstagramAutoplayClone
+# InstagramFeedClone
 
 Are you searchinng for : 
 "How to play videos like Instagram or TikTok or LinkedIn in Android ?"
