@@ -11,7 +11,7 @@
 
         <fragment
             android:id="@+id/feed_list_fragment"
-            android:name="com.nehak.instagramfeed.FeedListFragment"
+            android:name="com.nehak.instagramfeed.feedUI.FeedListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_feed_list" />

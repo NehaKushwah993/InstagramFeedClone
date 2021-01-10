@@ -7,7 +7,7 @@
 
         <variable
             name="adapter"
-            type="com.nehak.instagramfeed.FeedAdapter" />
+            type="com.nehak.instagramfeed.feedUI.FeedAdapter" />
 
 
     </data>
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:id="@+id/root_view_feed_fragment"
         android:layout_height="match_parent"
-        android:background="@color/teal_200"
+        android:background="@color/white"
         tools:context=".MainActivity">
 
         <androidx.recyclerview.widget.RecyclerView

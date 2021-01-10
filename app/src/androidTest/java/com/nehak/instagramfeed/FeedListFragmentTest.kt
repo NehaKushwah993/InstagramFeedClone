@@ -1,14 +1,13 @@
 package com.nehak.instagramfeed
 
 import androidx.fragment.app.testing.FragmentScenario
-import androidx.fragment.app.testing.launchFragment
 import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.Lifecycle
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
+import com.nehak.instagramfeed.feedUI.FeedListFragment
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -39,7 +38,7 @@ class FeedListFragmentTest {
 
     @Test
     fun is_ListItem_Visible_shouldBe_True() {
-        onView(withId(R.id.recycler_view)).check(matches(hasDescendant(withId(R.id.image_view))))
+        onView(withId(R.id.recycler_view)).check(matches(hasDescendant(withId(R.id.feedThumbnailView))))
     }
 
 

@@ -1,16 +1,16 @@
-package com.nehak.instagramfeed
+package com.nehak.instagramfeed.feedUI
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.nehak.instagramfeed.autoPlay.VideoAutoPlayHelper
 import com.nehak.instagramfeed.databinding.FragmentFeedListBinding
 
 class FeedListFragment : Fragment() {
 
-    lateinit var binding : FragmentFeedListBinding;
+    lateinit var binding: FragmentFeedListBinding;
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,7 +24,14 @@ class FeedListFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val feedAdapter = FeedAdapter()
+        /* Set adapter (items are being used inside adapter, you can setup in your own way*/
+        val feedAdapter = FeedAdapter(requireContext())
         binding.adapter = feedAdapter
+
+        /*Helper class to provide AutoPlay feature inside cell*/
+        val videoAutoPlayHelper =
+            VideoAutoPlayHelper(recyclerView = binding.recyclerView)
+        videoAutoPlayHelper.startObserving();
+
     }
 }
