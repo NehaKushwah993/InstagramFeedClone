@@ -59,7 +59,6 @@ class InstaLikePlayerView @JvmOverloads constructor(
 ) : FrameLayout(
     context!!, attrs, defStyleAttr
 ), AdViewProvider {
-    private val componentListener: ComponentListener
     var videoSurfaceView: View?
     private var player: Player? = null
     private var textureViewRotation = 0
@@ -95,25 +94,17 @@ class InstaLikePlayerView @JvmOverloads constructor(
         }
         val oldPlayer = this.player
         if (oldPlayer != null) {
-            oldPlayer.removeListener(componentListener)
             val oldVideoComponent = oldPlayer.videoComponent
             if (oldVideoComponent != null) {
-                oldVideoComponent.removeVideoListener(componentListener)
                 oldVideoComponent.clearVideoSurfaceView(videoSurfaceView as SurfaceView?)
             }
-            val oldTextComponent = oldPlayer.textComponent
-            oldTextComponent?.removeTextOutput(componentListener)
         }
         this.player = player
         if (player != null) {
             val newVideoComponent = player.videoComponent
             if (newVideoComponent != null) {
                 newVideoComponent.setVideoSurfaceView(videoSurfaceView as SurfaceView?)
-                newVideoComponent.addVideoListener(componentListener)
             }
-            val newTextComponent = player.textComponent
-            newTextComponent?.addTextOutput(componentListener)
-            player.addListener(componentListener)
         } else {
         }
     }
@@ -176,133 +167,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
         return keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_UP_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_UP_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_CENTER
     }
 
-    private inner class ComponentListener : Player.EventListener, TextOutput, VideoListener,
-        OnLayoutChangeListener, SingleTapListener, PlayerControlView.VisibilityListener {
-        private val period: Timeline.Period
-        private var lastPeriodUidWithTracks: Any? = null
-
-        // TextOutput implementation
-        override fun onCues(cues: List<Cue>) {}
-
-        // VideoListener implementation
-        override fun onVideoSizeChanged(
-            width: Int, height: Int, unappliedRotationDegrees: Int, pixelWidthHeightRatio: Float
-        ) {
-            var videoAspectRatio: Float =
-                if (height == 0 || width == 0) 1F else width * pixelWidthHeightRatio / height
-
-//      onContentAspectRatioChanged(videoAspectRatio, contentFrame, surfaceView);
-        }
-
-        override fun onRenderedFirstFrame() {}
-        override fun onTracksChanged(tracks: TrackGroupArray, selections: TrackSelectionArray) {
-            // Suppress the update if transitioning to an unprepared period within the same window. This
-            // is necessary to avoid closing the shutter when such a transition occurs. See:
-            // https://github.com/google/ExoPlayer/issues/5507.
-            val player = Assertions.checkNotNull(player)
-            val timeline = player.currentTimeline
-            if (timeline.isEmpty) {
-                lastPeriodUidWithTracks = null
-            } else if (!player.currentTrackGroups.isEmpty) {
-                lastPeriodUidWithTracks =
-                    timeline.getPeriod(player.currentPeriodIndex, period,  /* setIds= */true).uid
-            } else if (lastPeriodUidWithTracks != null) {
-                val lastPeriodIndexWithTracks = timeline.getIndexOfPeriod(
-                    lastPeriodUidWithTracks!!
-                )
-                if (lastPeriodIndexWithTracks != C.INDEX_UNSET) {
-                    val lastWindowIndexWithTracks =
-                        timeline.getPeriod(lastPeriodIndexWithTracks, period).windowIndex
-                    if (player.currentWindowIndex == lastWindowIndexWithTracks) {
-                        // We're in the same window. Suppress the update.
-                        return
-                    }
-                }
-                lastPeriodUidWithTracks = null
-            }
-        }
-
-        // OnLayoutChangeListener implementation
-        override fun onLayoutChange(
-            view: View,
-            left: Int,
-            top: Int,
-            right: Int,
-            bottom: Int,
-            oldLeft: Int,
-            oldTop: Int,
-            oldRight: Int,
-            oldBottom: Int
-        ) {
-            applyTextureViewRotation(view as TextureView, textureViewRotation)
-        }
-
-        // SingleTapListener implementation
-        override fun onSingleTapUp(e: MotionEvent): Boolean {
-            return false
-        }
-
-        // PlayerControlView.VisibilityListener implementation
-        override fun onVisibilityChange(visibility: Int) {}
-
-        init {
-            period = Timeline.Period()
-        }
-    }
-
-    companion object {
-        /**
-         * Switches the view targeted by a given [Player].
-         *
-         * @param player        The player whose target view is being switched.
-         * @param oldPlayerView The old view to detach from the player.
-         * @param newPlayerView The new view to attach to the player.
-         */
-        fun switchTargetView(
-            player: Player?,
-            oldPlayerView: InstaLikePlayerView?,
-            newPlayerView: InstaLikePlayerView?
-        ) {
-            if (oldPlayerView === newPlayerView) {
-                return
-            }
-            // We attach the new view before detaching the old one because this ordering allows the player
-            // to swap directly from one surface to another, without transitioning through a state where no
-            // surface is attached. This is significantly more efficient and achieves a more seamless
-            // transition when using platform provided video decoders.
-            newPlayerView?.setPlayer(player)
-            oldPlayerView?.setPlayer(null)
-        }
-
-        /**
-         * Applies a texture rotation to a [TextureView].
-         */
-        private fun applyTextureViewRotation(textureView: TextureView, textureViewRotation: Int) {
-            val transformMatrix = Matrix()
-            val textureViewWidth = textureView.width.toFloat()
-            val textureViewHeight = textureView.height.toFloat()
-            if (textureViewWidth != 0f && textureViewHeight != 0f && textureViewRotation != 0) {
-                val pivotX = textureViewWidth / 2
-                val pivotY = textureViewHeight / 2
-                transformMatrix.postRotate(textureViewRotation.toFloat(), pivotX, pivotY)
-
-                // After rotation, scale the rotated texture to fit the TextureView size.
-                val originalTextureRect = RectF(0f, 0f, textureViewWidth, textureViewHeight)
-                val rotatedTextureRect = RectF()
-                transformMatrix.mapRect(rotatedTextureRect, originalTextureRect)
-                transformMatrix.postScale(
-                    textureViewWidth / rotatedTextureRect.width(),
-                    textureViewHeight / rotatedTextureRect.height(),
-                    pivotX,
-                    pivotY
-                )
-            }
-            textureView.setTransform(transformMatrix)
-        }
-    }
-
     init {
-        componentListener = ComponentListener()
         if (isInEditMode) {
             videoSurfaceView = null
 
@@ -317,17 +182,14 @@ class InstaLikePlayerView @JvmOverloads constructor(
         }
     }
 
-
     private var lastPos: Long? = 0
-    private var lastFrameOfVideo: ImageView? = null;
     private var videoUri: Uri? = null;
-
 
     var cacheDataSourceFactory = CacheDataSourceFactory(
         Constants.simpleCache,
         DefaultHttpDataSourceFactory(
             Util.getUserAgent(
-                context!!, context!!.getString(
+                context!!, context.getString(
                     R.string.app_name
                 )
             )
@@ -384,11 +246,10 @@ class InstaLikePlayerView @JvmOverloads constructor(
      *
      */
     fun removePlayer() {
-        val playerViewCopy = this;
-        playerViewCopy!!.getPlayer()?.setPlayWhenReady(false)
-        lastPos = playerViewCopy?.getPlayer()?.currentPosition
+        getPlayer()?.setPlayWhenReady(false)
+        lastPos = getPlayer()?.currentPosition
         reset()
-        playerViewCopy?.getPlayer()?.stop(true)
+        getPlayer()?.stop(true)
 
     }
 

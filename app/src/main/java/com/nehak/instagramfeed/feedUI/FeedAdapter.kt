@@ -44,7 +44,7 @@ class FeedAdapter(val context: Context) : ListAdapter<FeedItem, FeedViewHolder>(
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
 
         /*Reset ViewHolder */
-        removeImageFromImageView(holder.videoThumbnail)
+//        removeImageFromImageView(holder.videoThumbnail)
         holder.customPlayerView.reset()
 
         /*Set seperate ID for each player view, to prevent it being overlapped by other player's changes*/
