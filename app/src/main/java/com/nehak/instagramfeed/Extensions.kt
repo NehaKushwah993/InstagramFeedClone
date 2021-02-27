@@ -1,5 +1,8 @@
 package com.nehak.instagramfeed
 
+import android.content.Context
+import android.graphics.drawable.Drawable
+import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -112,6 +115,12 @@ class Extensions {
             return if (pos == 0) { //&& linearLayoutmanager.findViewByPosition(pos)!=null && linearLayoutmanager.findViewByPosition(pos).getTop()==0){
                 true
             } else false
+        }
+
+
+        fun Context.getResource(name:String): Drawable? {
+            val resID = this.resources.getIdentifier(name , "drawable", this.packageName)
+            return ActivityCompat.getDrawable(this,resID)
         }
     }
 

@@ -5,10 +5,6 @@
     <data>
 
         <variable
-            name="mainActivityVM"
-            type="com.nehak.instagramfeed.viewModels.ViewModelMainActivity" />
-
-        <variable
             name="adapter"
             type="com.nehak.instagramfeed.feedUI.FeedAdapter" />
 

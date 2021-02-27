@@ -1,15 +1,11 @@
 package com.nehak.instagramfeed.feedUI
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.nehak.instagramfeed.databinding.ItemFeedBinding
 
 /**
  * Create By Neha Kushwah
  */
-class FeedViewHolder(binding: ItemFeedBinding) : RecyclerView.ViewHolder(binding.root) {
-    val videoThumbnail =
-        binding.feedThumbnailView;
-    val customPlayerView =
-        binding.feedPlayerView;
+abstract class FeedViewHolder(root: View) : RecyclerView.ViewHolder(root) {
 
 }

@@ -10,15 +10,17 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.nehak.instagramfeed.other.Constants
 import com.nehak.instagramfeed.dataModels.FeedItem
+import com.nehak.instagramfeed.databinding.HorizontalItemFeedBinding
 import com.nehak.instagramfeed.databinding.ItemFeedBinding
+import com.nehak.instagramfeed.other.Constants
 
 
 /**
  * Create By Neha Kushwah
  */
-class FeedAdapter(val context: Context) : ListAdapter<FeedItem, FeedViewHolder>(DIFF_CALLBACK) {
+class FeedAdapter(val context: Context) :
+    ListAdapter<FeedItem, FeedViewHolder>(DIFF_CALLBACK) {
 
     companion object {
         /** Mandatory implementation inorder to use "ListAdapter" - new JetPack component" **/
@@ -33,16 +35,47 @@ class FeedAdapter(val context: Context) : ListAdapter<FeedItem, FeedViewHolder>(
 
         }
         val TOTAL_ITEMS = 200;
+
+        const val FEED_TYPE_VIDEO = 1;
+        const val FEED_TYPE_IMAGES_MULTIPLE = 2;
     }
 
+    override fun getItemViewType(position: Int): Int {
+        if (position % 2 == 0) {
+            return FEED_TYPE_VIDEO;
+        } else {
+            return FEED_TYPE_IMAGES_MULTIPLE
+        }
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
-        return FeedViewHolder(
+
+        if (viewType == FEED_TYPE_IMAGES_MULTIPLE) {
+            return ImageFeedViewHolder(
+                HorizontalItemFeedBinding.inflate(
+                    android.view.LayoutInflater.from(
+                        parent.context
+                    ), parent, false
+                )
+            )
+        }
+        return VideoFeedViewHolder(
             ItemFeedBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
 
+        if (holder is VideoFeedViewHolder) {
+            handleViewHolder(holder, position)
+        } else if (holder is ImageFeedViewHolder) {
+            handleViewHolder(holder, position)
+        }
+
+    }
+
+    private fun handleViewHolder(holder: VideoFeedViewHolder, position: Int) {
         /*Reset ViewHolder */
 //        removeImageFromImageView(holder.videoThumbnail)
         holder.customPlayerView.reset()
@@ -54,7 +87,8 @@ class FeedAdapter(val context: Context) : ListAdapter<FeedItem, FeedViewHolder>(
         val videoPos = (position % Constants.videoList.size);
 
         /*Set ratio according to video*/
-        (holder.videoThumbnail.layoutParams as ConstraintLayout.LayoutParams).dimensionRatio = Constants.videoList.get(videoPos).dimension
+        (holder.videoThumbnail.layoutParams as ConstraintLayout.LayoutParams).dimensionRatio =
+            Constants.videoList.get(videoPos).dimension
 
         /*Set video's direct url*/
         holder.customPlayerView.setVideoUri(Uri.parse(Constants.videoList.get(videoPos).downloadUrl))
@@ -68,6 +102,13 @@ class FeedAdapter(val context: Context) : ListAdapter<FeedItem, FeedViewHolder>(
 
         val res: Drawable = context.getResources().getDrawable(resID, null)
         holder.videoThumbnail.setImageDrawable(res);
+    }
+
+    private fun handleViewHolder(holder: ImageFeedViewHolder, position: Int) {
+
+        /* Set adapter (items are being used inside adapter, you can setup in your own way*/
+        val feedAdapter = ImageAdapter(holder.itemView.context)
+        holder.recyclerViewImages.adapter = feedAdapter
 
 
     }

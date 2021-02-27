@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nehak.instagramfeed.feedUI.FeedAdapter
 import com.nehak.instagramfeed.feedUI.FeedViewHolder
+import com.nehak.instagramfeed.feedUI.VideoFeedViewHolder
 import com.nehak.instagramfeed.player.InstaLikePlayerView
 
 /**
@@ -54,12 +55,24 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
         val feedViewHolder: FeedViewHolder =
             (recyclerView.findViewHolderForAdapterPosition(pos) as FeedViewHolder?)!!
 
-        if (lastPlayerView != feedViewHolder.customPlayerView) {
-            feedViewHolder.customPlayerView.startPlaying()
-            // stop last player
-            lastPlayerView?.removePlayer();
+        if(feedViewHolder is VideoFeedViewHolder) {
+            /** in case its a video**/
+            if (lastPlayerView==null || lastPlayerView != feedViewHolder.customPlayerView) {
+                feedViewHolder.customPlayerView.startPlaying()
+                // stop last player
+                lastPlayerView?.removePlayer();
+            }
+            lastPlayerView = feedViewHolder.customPlayerView;
+
+        } else {
+            /** in case its a image**/
+            if (lastPlayerView != null) {
+                // stop last player
+                lastPlayerView?.removePlayer();
+                lastPlayerView = null
+            }
+
         }
-        lastPlayerView = feedViewHolder.customPlayerView;
     }
 
     private fun getMostVisibleItem(firstVisiblePosition: Int, lastVisiblePosition: Int): Int {
