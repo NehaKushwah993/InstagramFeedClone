@@ -2,20 +2,20 @@ package com.nehak.instagramfeed
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.nehak.instagramfeed.other.Constants
+import androidx.fragment.app.FragmentActivity
 import com.nehak.instagramfeed.autoPlay.VideoPreLoadingService
 import com.nehak.instagramfeed.dataModels.FeedItem
 import com.nehak.instagramfeed.databinding.ActivityMainBinding
+import com.nehak.instagramfeed.other.Constants
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
-
+class MainActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+
         startPreCachingOfVideo()
 
     }
