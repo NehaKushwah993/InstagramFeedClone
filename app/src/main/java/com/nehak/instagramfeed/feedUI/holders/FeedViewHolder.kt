@@ -1,4 +1,4 @@
-package com.nehak.instagramfeed.feedUI
+package com.nehak.instagramfeed.feedUI.holders
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

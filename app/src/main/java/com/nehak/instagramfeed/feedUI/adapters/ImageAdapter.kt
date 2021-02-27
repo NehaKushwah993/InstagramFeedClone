@@ -1,23 +1,22 @@
-package com.nehak.instagramfeed.feedUI
+package com.nehak.instagramfeed.feedUI.adapters
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.nehak.instagramfeed.Extensions.Companion.getResource
-import com.nehak.instagramfeed.R
+import com.nehak.instagramfeed.other.Extensions.Companion.getResource
 import com.nehak.instagramfeed.dataModels.FeedItem
 import com.nehak.instagramfeed.databinding.ImageItemSingleBinding
+import com.nehak.instagramfeed.feedUI.holders.ImageViewHolder
 import kotlin.random.Random
 
 
 /**
  * Create By Neha Kushwah
  */
-class ImageAdapter(val context: Context) :
+class ImageAdapter(val context: Context, val parentPosition: Int) :
     ListAdapter<FeedItem, ImageViewHolder>(DIFF_CALLBACK) {
 
     companion object {
@@ -33,7 +32,7 @@ class ImageAdapter(val context: Context) :
 
         }
 
-        public val TOTAL_IMAGES = 5;
+        public val TOTAL_IMAGES = 4;
     }
 
 
@@ -47,7 +46,8 @@ class ImageAdapter(val context: Context) :
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
 
         /* Show any random image from drawable*/
-        holder.imageView.setImageDrawable(holder.itemView.context.getResource("image_"+rand(0,7)));
+        val posToPick = (parentPosition+position)%7;
+        holder.imageView.setImageDrawable(holder.itemView.context.getResource("image_"+posToPick));
 
     }
 

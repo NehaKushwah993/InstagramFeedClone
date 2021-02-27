@@ -1,4 +1,4 @@
-package com.nehak.instagramfeed.feedUI
+package com.nehak.instagramfeed.feedUI.adapters
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.ListAdapter
 import com.nehak.instagramfeed.dataModels.FeedItem
 import com.nehak.instagramfeed.databinding.HorizontalItemFeedBinding
 import com.nehak.instagramfeed.databinding.ItemFeedBinding
+import com.nehak.instagramfeed.feedUI.holders.FeedViewHolder
+import com.nehak.instagramfeed.feedUI.holders.ImageFeedViewHolder
+import com.nehak.instagramfeed.feedUI.holders.VideoFeedViewHolder
 import com.nehak.instagramfeed.other.Constants
 
 
@@ -54,7 +57,7 @@ class FeedAdapter(val context: Context) :
         if (viewType == FEED_TYPE_IMAGES_MULTIPLE) {
             return ImageFeedViewHolder(
                 HorizontalItemFeedBinding.inflate(
-                    android.view.LayoutInflater.from(
+                    LayoutInflater.from(
                         parent.context
                     ), parent, false
                 )
@@ -107,7 +110,7 @@ class FeedAdapter(val context: Context) :
     private fun handleViewHolder(holder: ImageFeedViewHolder, position: Int) {
 
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
-        val feedAdapter = ImageAdapter(holder.itemView.context)
+        val feedAdapter = ImageAdapter(holder.itemView.context, position)
         holder.recyclerViewImages.adapter = feedAdapter
 
 

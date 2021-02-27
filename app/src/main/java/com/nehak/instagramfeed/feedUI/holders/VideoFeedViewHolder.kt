@@ -1,7 +1,7 @@
-package com.nehak.instagramfeed.feedUI
+package com.nehak.instagramfeed.feedUI.holders
 
-import androidx.recyclerview.widget.RecyclerView
 import com.nehak.instagramfeed.databinding.ItemFeedBinding
+import com.nehak.instagramfeed.feedUI.holders.FeedViewHolder
 
 /**
  * Create By Neha Kushwah

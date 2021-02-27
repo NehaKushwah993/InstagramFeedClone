@@ -1,4 +1,4 @@
-package com.nehak.instagramfeed.feedUI
+package com.nehak.instagramfeed.feedUI.holders
 
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.google.android.material.tabs.TabLayout
 import com.nehak.instagramfeed.databinding.HorizontalItemFeedBinding
-import com.nehak.instagramfeed.feedUI.ImageAdapter.Companion.TOTAL_IMAGES
+import com.nehak.instagramfeed.feedUI.adapters.ImageAdapter.Companion.TOTAL_IMAGES
 
 /**
  * Create By Neha Kushwah

@@ -3,9 +3,9 @@ package com.nehak.instagramfeed.autoPlay
 import android.graphics.Rect
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.nehak.instagramfeed.feedUI.FeedAdapter
-import com.nehak.instagramfeed.feedUI.FeedViewHolder
-import com.nehak.instagramfeed.feedUI.VideoFeedViewHolder
+import com.nehak.instagramfeed.feedUI.adapters.FeedAdapter
+import com.nehak.instagramfeed.feedUI.holders.FeedViewHolder
+import com.nehak.instagramfeed.feedUI.holders.VideoFeedViewHolder
 import com.nehak.instagramfeed.player.InstaLikePlayerView
 
 /**

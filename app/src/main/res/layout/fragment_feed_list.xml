@@ -6,7 +6,7 @@
 
         <variable
             name="adapter"
-            type="com.nehak.instagramfeed.feedUI.FeedAdapter" />
+            type="com.nehak.instagramfeed.feedUI.adapters.FeedAdapter" />
 
 
     </data>

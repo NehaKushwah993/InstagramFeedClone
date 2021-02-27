@@ -1,4 +1,4 @@
-package com.nehak.instagramfeed
+package com.nehak.instagramfeed.other
 
 import android.content.Context
 import android.graphics.drawable.Drawable

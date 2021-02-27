@@ -9,10 +9,11 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.nehak.instagramfeed.Extensions.Companion.findFirstVisibleItemPosition
-import com.nehak.instagramfeed.Extensions.Companion.isAtTop
+import com.nehak.instagramfeed.other.Extensions.Companion.findFirstVisibleItemPosition
+import com.nehak.instagramfeed.other.Extensions.Companion.isAtTop
 import com.nehak.instagramfeed.autoPlay.VideoAutoPlayHelper
 import com.nehak.instagramfeed.databinding.FragmentFeedListBinding
+import com.nehak.instagramfeed.feedUI.adapters.FeedAdapter
 import com.nehak.instagramfeed.other.Lg
 
 /**
