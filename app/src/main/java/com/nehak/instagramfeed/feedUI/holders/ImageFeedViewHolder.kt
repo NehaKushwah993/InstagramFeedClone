@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
-import com.google.android.material.tabs.TabLayout
 import com.nehak.instagramfeed.databinding.HorizontalItemFeedBinding
 import com.nehak.instagramfeed.feedUI.adapters.ImageAdapter.Companion.TOTAL_IMAGES
 
@@ -13,15 +12,15 @@ import com.nehak.instagramfeed.feedUI.adapters.ImageAdapter.Companion.TOTAL_IMAG
  * Create By Neha Kushwah
  */
 class ImageFeedViewHolder(root: View) : FeedViewHolder(root) {
-    lateinit var recyclerViewImages: RecyclerView;
+    lateinit var recyclerViewImages: RecyclerView
 
     constructor(binding: HorizontalItemFeedBinding) : this(binding.root) {
         recyclerViewImages =
-            binding.recyclerViewImages;
+            binding.recyclerViewImages
 
         /** Keep the item center aligned**/
-        val snapHelper: SnapHelper = PagerSnapHelper();
-        snapHelper.attachToRecyclerView(recyclerViewImages);
+        val snapHelper: SnapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerViewImages)
 
 
         /**
@@ -37,8 +36,7 @@ class ImageFeedViewHolder(root: View) : FeedViewHolder(root) {
                 val itemPosition: Int =
                     (recyclerViewImages.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
                 try {
-                    val tab: TabLayout.Tab? = binding.dots.getTabAt(itemPosition)
-                    if (tab != null) tab.select()
+                    binding.dots.getTabAt(itemPosition)?.select()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

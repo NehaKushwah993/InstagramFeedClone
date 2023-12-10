@@ -1,7 +1,6 @@
 package com.nehak.instagramfeed.feedUI.holders
 
 import com.nehak.instagramfeed.databinding.ItemFeedBinding
-import com.nehak.instagramfeed.feedUI.holders.FeedViewHolder
 
 /**
  * Create By Neha Kushwah

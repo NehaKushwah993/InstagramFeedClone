@@ -30,7 +30,7 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
             /*check if current view is more than MIN_LIMIT_VISIBILITY*/
             if (currentPlayingVideoItemPos != -1) {
                 val viewHolder: RecyclerView.ViewHolder =
-                    recyclerView?.findViewHolderForAdapterPosition(currentPlayingVideoItemPos)!!
+                    recyclerView.findViewHolderForAdapterPosition(currentPlayingVideoItemPos)!!
 
                 val currentVisibility = getVisiblePercentage(viewHolder);
                 if (currentVisibility < MIN_LIMIT_VISIBILITY) {

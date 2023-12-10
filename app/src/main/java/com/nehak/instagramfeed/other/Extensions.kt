@@ -1,5 +1,6 @@
 package com.nehak.instagramfeed.other
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.core.app.ActivityCompat
@@ -37,32 +38,12 @@ class Extensions {
 
         /**
          *
-         * Returns the maximum value in an array.
-         *
-         * @param array  an array, must not be null or empty
-         * @return the maximum value in the array
-         */
-        fun max(array: IntArray): Int {
-
-            // Finds and returns max
-            var max: Int = array[0]
-            for (j in 1 until array.size) {
-                if (array[j] > max) {
-                    max = array[j]
-                }
-            }
-            return max
-        }
-
-
-        /**
-         *
          * Returns the min value in an array.
          *
          * @param array  an array, must not be null or empty
          * @return the min value in the array
          */
-        fun min(array: IntArray): Int {
+        private fun min(array: IntArray): Int {
 
             // Finds and returns max
             var min: Int = array[0]
@@ -75,36 +56,6 @@ class Extensions {
         }
 
 
-
-        /**
-         *
-         * Returns LastVisibleItemPosition
-         *
-         */
-        fun RecyclerView.findLastVisibleItemPosition(): Int {
-            if (getLayoutManager() is LinearLayoutManager) {
-                return (getLayoutManager() as LinearLayoutManager).findLastVisibleItemPosition()
-            }
-            return if (getLayoutManager() is StaggeredGridLayoutManager) {
-                findLastVisibleItemPosition(getLayoutManager() as StaggeredGridLayoutManager)
-            } else -1
-        }
-
-        /**
-         *
-         * Returns LastVisibleItemPosition
-         *
-         */
-        fun findLastVisibleItemPosition(
-            staggeredGridLayoutManager: StaggeredGridLayoutManager
-        ): Int {
-            val mItemPositionsHolder = IntArray(staggeredGridLayoutManager.spanCount)
-            return max(
-                staggeredGridLayoutManager.findLastVisibleItemPositions(mItemPositionsHolder)
-            )
-        }
-
-
         /**
          *
          * Returns true if recyclerView isAtTop
@@ -112,12 +63,11 @@ class Extensions {
          */
         fun RecyclerView.isAtTop(): Boolean {
             val pos: Int = (layoutManager as LinearLayoutManager?)?.findFirstCompletelyVisibleItemPosition()!!
-            return if (pos == 0) { //&& linearLayoutmanager.findViewByPosition(pos)!=null && linearLayoutmanager.findViewByPosition(pos).getTop()==0){
-                true
-            } else false
+            return pos == 0
         }
 
 
+        @SuppressLint("DiscouragedApi")
         fun Context.getResource(name:String): Drawable? {
             val resID = this.resources.getIdentifier(name , "drawable", this.packageName)
             return ActivityCompat.getDrawable(this,resID)

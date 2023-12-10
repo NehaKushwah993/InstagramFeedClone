@@ -1,6 +1,5 @@
 package com.nehak.instagramfeed.feedUI.holders
 
-import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.nehak.instagramfeed.databinding.ImageItemSingleBinding
 

@@ -15,66 +15,48 @@
  */
 package com.nehak.instagramfeed.player
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Matrix
-import android.graphics.RectF
 import android.net.Uri
-import android.os.Handler
-import android.os.HandlerThread
-import android.os.Looper
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
-import android.widget.ImageView
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.Timeline
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.source.TrackGroupArray
-import com.google.android.exoplayer2.source.ads.AdsLoader.AdViewProvider
-import com.google.android.exoplayer2.text.Cue
-import com.google.android.exoplayer2.text.TextOutput
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray
-import com.google.android.exoplayer2.ui.PlayerControlView
-import com.google.android.exoplayer2.ui.spherical.SingleTapListener
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
-import com.google.android.exoplayer2.util.Assertions
-import com.google.android.exoplayer2.util.Util
-import com.google.android.exoplayer2.video.VideoListener
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.datasource.DataSource
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import com.nehak.instagramfeed.MainApplication
 import com.nehak.instagramfeed.R
-import com.nehak.instagramfeed.other.Constants
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+
 
 class InstaLikePlayerView @JvmOverloads constructor(
     context: Context?,
-    attrs: AttributeSet? =  /* attrs= */null,
-    defStyleAttr: Int =  /* defStyleAttr= */0
+    attrs: AttributeSet? =  null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(
     context!!, attrs, defStyleAttr
-), AdViewProvider {
-    var videoSurfaceView: View?
-    private var player: Player? = null
-    private var textureViewRotation = 0
+) {
+    private var videoSurfaceView: View?
+    private var player: ExoPlayer? = null
     private var isTouching = false
+    private var lastPos: Long? = 0
+    private var videoUri: Uri? = null
 
     /**
      * Returns the player currently set on this view, or null if no player is set.
      */
-    fun getPlayer(): Player? {
+    private fun getPlayer(): ExoPlayer? {
         return player
     }
+
 
     /**
      * Set the [Player] to use.
      *
-     *
+
      * To transition a [Player] from targeting one view to another, it's recommended to use
      * [.switchTargetView] rather than this method. If you do
      * wish to use this method directly, be sure to attach the player to the new view *before*
@@ -84,44 +66,28 @@ class InstaLikePlayerView @JvmOverloads constructor(
      * @param player The [Player] to use, or `null` to detach the current player. Only
      * players which are accessed on the main thread are supported (`player.getApplicationLooper() == Looper.getMainLooper()`).
      */
-    fun setPlayer(player: Player?) {
-        Assertions.checkState(Looper.myLooper() == Looper.getMainLooper())
-        Assertions.checkArgument(
-            player == null || player.applicationLooper == Looper.getMainLooper()
-        )
+    private fun setPlayer(player: ExoPlayer?) {
         if (this.player === player) {
             return
         }
         val oldPlayer = this.player
-        if (oldPlayer != null) {
-            val oldVideoComponent = oldPlayer.videoComponent
-            if (oldVideoComponent != null) {
-                oldVideoComponent.clearVideoSurfaceView(videoSurfaceView as SurfaceView?)
-            }
-        }
+
+        oldPlayer?.clearVideoSurfaceView(videoSurfaceView as SurfaceView?)
         this.player = player
-        if (player != null) {
-            val newVideoComponent = player.videoComponent
-            if (newVideoComponent != null) {
-                newVideoComponent.setVideoSurfaceView(videoSurfaceView as SurfaceView?)
-            }
-        } else {
-        }
+        player?.setVideoSurfaceView(videoSurfaceView as SurfaceView?)
     }
 
     override fun setVisibility(visibility: Int) {
         super.setVisibility(visibility)
-
         // Work around https://github.com/google/ExoPlayer/issues/3160.
-        videoSurfaceView?.setVisibility(visibility)
-
+        videoSurfaceView?.visibility = visibility
     }
 
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (player != null && player!!.isPlayingAd) {
             return super.dispatchKeyEvent(event)
         }
-        val isDpadKey = isDpadKey(event.keyCode)
+//        val isDpadKey = isDpadKey(event.keyCode)
         return false
     }
 
@@ -154,18 +120,11 @@ class InstaLikePlayerView @JvmOverloads constructor(
         return false
     }
 
-    override fun getAdViewGroup(): ViewGroup? {
-        return null
-    }
 
-    override fun getAdOverlayViews(): Array<View?> {
-        return arrayOfNulls(0)
-    }
-
-    @SuppressLint("InlinedApi")
-    private fun isDpadKey(keyCode: Int): Boolean {
-        return keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_UP_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_UP_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_CENTER
-    }
+//    @SuppressLint("InlinedApi")
+//    private fun isDpadKey(keyCode: Int): Boolean {
+//        return keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_UP_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_DOWN_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_UP_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_CENTER
+//    }
 
     init {
         if (isInEditMode) {
@@ -178,62 +137,51 @@ class InstaLikePlayerView @JvmOverloads constructor(
 
             // Content frame.
             videoSurfaceView = findViewById(R.id.surface_view)
-            init()
+            initPlayer()
         }
     }
 
-    private var lastPos: Long? = 0
-    private var videoUri: Uri? = null;
-
-    var cacheDataSourceFactory = CacheDataSourceFactory(
-        Constants.simpleCache,
-        DefaultHttpDataSourceFactory(
-            Util.getUserAgent(
-                context!!, context.getString(
-                    R.string.app_name
-                )
-            )
-        ),
-        CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR
-    )
-
-    fun init() {
+    private fun initPlayer() {
         reset()
 
         /*Setup player + Adding Cache Directory*/
-        val simpleExoPlayer = SimpleExoPlayer.Builder(context).build()
-        simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ONE;
-        simpleExoPlayer.addListener(object : Player.EventListener {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                super.onPlayerStateChanged(playWhenReady, playbackState)
-                if (playbackState == Player.STATE_READY) {
-                    simpleExoPlayer.seekTo(lastPos!!)
-                    alpha = 1f
+        val player = ExoPlayer.Builder(context).build()
+        player.repeatMode = Player.REPEAT_MODE_ALL
+        player.addListener(
+            object : Player.Listener {
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    super.onPlaybackStateChanged(playbackState)
+                    print("playbackState== $playbackState")
+                    if(playbackState == Player.STATE_READY){
+                        alpha = 1f
+                    }
 
                 }
             }
-
-        })
-
-        simpleExoPlayer.playWhenReady = false
-        setPlayer(simpleExoPlayer);
-
+        )
+        setPlayer(player)
     }
 
     /**
      * This will resuse the player and will play new URI we have provided
      */
+    @androidx.annotation.OptIn(UnstableApi::class)
     fun startPlaying() {
+        val mediaItem = MediaItem.fromUri(videoUri!!)
+        val cacheDataSourceFactory: DataSource.Factory =
+            CacheDataSource.Factory()
+                .setCache(MainApplication.cache)
+                .setUpstreamDataSourceFactory(
+                    DefaultHttpDataSource.Factory()
+                        .setUserAgent("ExoPlayer"))
 
-        val mediaSource =
-            ProgressiveMediaSource.Factory(cacheDataSourceFactory)
-                .createMediaSource(videoUri)
-        (player as SimpleExoPlayer).prepare(mediaSource)
+        val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
+            .createMediaSource(mediaItem)
 
+        player?.setMediaSource(mediaSource)
         player?.seekTo(lastPos!!)
-        player?.playWhenReady = true
-
-
+        player?.prepare()
+        player?.play()
     }
 
     /**
@@ -246,10 +194,10 @@ class InstaLikePlayerView @JvmOverloads constructor(
      *
      */
     fun removePlayer() {
-        getPlayer()?.setPlayWhenReady(false)
+        getPlayer()?.playWhenReady = false
         lastPos = getPlayer()?.currentPosition
         reset()
-        getPlayer()?.stop(true)
+        getPlayer()?.stop()
 
     }
 
@@ -260,6 +208,6 @@ class InstaLikePlayerView @JvmOverloads constructor(
     }
 
     fun setVideoUri(uri: Uri?) {
-        this.videoUri = uri;
+        this.videoUri = uri
     }
 }

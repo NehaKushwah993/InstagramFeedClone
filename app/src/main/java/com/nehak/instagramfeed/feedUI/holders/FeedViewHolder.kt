@@ -6,6 +6,4 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Create By Neha Kushwah
  */
-abstract class FeedViewHolder(root: View) : RecyclerView.ViewHolder(root) {
-
-}
+abstract class FeedViewHolder(root: View) : RecyclerView.ViewHolder(root)

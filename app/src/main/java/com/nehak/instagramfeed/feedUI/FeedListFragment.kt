@@ -1,6 +1,5 @@
 package com.nehak.instagramfeed.feedUI
 
-import android.animation.Animator
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,11 +20,11 @@ import com.nehak.instagramfeed.other.Lg
  */
 class FeedListFragment : Fragment() {
 
-    private var controlsVisibleShowHide: Boolean = false;
-    private val HIDE_THRESHOLD = 100;
-    private var isHeaderAlreadyHidden = false;
-    lateinit var binding: FragmentFeedListBinding;
-    private var scrolledDistance: Int = 0;
+    private var controlsVisibleShowHide: Boolean = false
+    private val hideThreshold = 100
+    private var isHeaderAlreadyHidden = false
+    lateinit var binding: FragmentFeedListBinding
+    private var scrolledDistance: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,9 +32,10 @@ class FeedListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFeedListBinding.inflate(inflater, container, false)
-        return binding.root;
+        return binding.root
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -46,7 +46,7 @@ class FeedListFragment : Fragment() {
         /*Helper class to provide AutoPlay feature inside cell*/
         val videoAutoPlayHelper =
             VideoAutoPlayHelper(recyclerView = binding.recyclerView)
-        videoAutoPlayHelper.startObserving();
+        videoAutoPlayHelper.startObserving()
 
         /*Helper class to provide show/hide toolBar*/
         attachScrollControlListener(binding.customToolBar, binding.recyclerView)
@@ -56,7 +56,7 @@ class FeedListFragment : Fragment() {
     /**
      * This method will show hide view passed as @param -toolBar
      */
-    fun attachScrollControlListener(toolBar: View?, recyclerView: RecyclerView) {
+    private fun attachScrollControlListener(toolBar: View?, recyclerView: RecyclerView) {
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -75,21 +75,20 @@ class FeedListFragment : Fragment() {
                 }
 
                 //show views if first item is first visible position and views are hidden
-
-                if (firstVisibleItem == 0 && recyclerView.computeVerticalScrollOffset() < HIDE_THRESHOLD) {
+                if (firstVisibleItem == 0 && recyclerView.computeVerticalScrollOffset() < hideThreshold) {
                     if (!controlsVisibleShowHide) {
                         controlsVisibleShowHide = true
-                        showTopBarWithAnim(toolBar, recyclerView, true, null)
+                        showTopBarWithAnim(toolBar, recyclerView, true)
                         scrolledDistance = 0
                     }
                 } else {
-                    if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisibleShowHide) {
+                    if (scrolledDistance < -hideThreshold && !controlsVisibleShowHide) {
                         controlsVisibleShowHide = true
-                        showTopBarWithAnim(toolBar, recyclerView, true, null)
+                        showTopBarWithAnim(toolBar, recyclerView, true)
                         scrolledDistance = 0
-                    } else if (dy > 0/* && hideForcefully()*/ || scrolledDistance > HIDE_THRESHOLD && controlsVisibleShowHide) {
+                    } else if (dy > 0/* && hideForcefully()*/ || scrolledDistance > hideThreshold && controlsVisibleShowHide) {
                         controlsVisibleShowHide = false
-                        showTopBarWithAnim(toolBar, recyclerView, false, null)
+                        showTopBarWithAnim(toolBar, recyclerView, false)
                         scrolledDistance = 0
                     }
                 }
@@ -110,8 +109,7 @@ class FeedListFragment : Fragment() {
     fun showTopBarWithAnim(
         toolBar: View?,
         recyclerView: RecyclerView,
-        show: Boolean,
-        animationListener: Animator.AnimatorListener?
+        show: Boolean
     ) {
         if (show) {
             if (!isHeaderAlreadyHidden) {
@@ -132,7 +130,7 @@ class FeedListFragment : Fragment() {
             }
             isHeaderAlreadyHidden = true
             toolBar?.animate()
-                ?.translationY((-toolBar?.getHeight()!!).toFloat())
+                ?.translationY((-toolBar.height).toFloat())
                 ?.setInterpolator(AccelerateInterpolator(2F))
 
         }
