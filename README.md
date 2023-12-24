@@ -16,10 +16,12 @@ This Project will provide following things :
 See the demo here...
 
 New version (24th Dec, 2023) : 
-![instagram_feed](demo/instagram_feed_2.gif)
+![](https://placebear.com/g/200/200)
 
 Older version :
-![instagram_feed](demo/instagram_feed.gif)
+![](https://github.com/NehaKushwah993/InstagramVideoFeedClone/blob/main/demo/instagram_feed.gif)
+
+![instagram_feed](https://github.com/NehaKushwah993/InstagramVideoFeedClone/blob/main/demo/sample_video.mov)
 
 and please let me know if you find any issue in my code...
 
