@@ -15,7 +15,7 @@ This Project will provide following things :
 
 See the demo here...
 
-![instagram_feed](demo/instagram_feed.gif)
+![instagram_feed](demo/sample_video.mov)
 
 and please let me know if you find any issue in my code...
 
