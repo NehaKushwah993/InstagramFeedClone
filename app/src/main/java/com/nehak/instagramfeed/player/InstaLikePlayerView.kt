@@ -167,6 +167,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
      */
     @androidx.annotation.OptIn(UnstableApi::class)
     fun startPlaying() {
+        if(videoUri==null)return
         val mediaItem = MediaItem.fromUri(videoUri!!)
         val cacheDataSourceFactory: DataSource.Factory =
             CacheDataSource.Factory()

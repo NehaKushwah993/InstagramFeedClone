@@ -1,0 +1,39 @@
+[
+  [
+    {
+      "link": " https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "type": "video",
+      "thumbnail": "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
+      "ratio": "1282:718"
+    }
+  ],
+  [
+    {
+      "link": "https://i.imgur.com/CzXTtJV.jpg",
+      "type": "image",
+      "thumbnail": "https://i.imgur.com/CzXTtJV.jpg",
+      "ratio": "604:450"
+    },
+    {
+      "link": " https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "type": "video",
+      "thumbnail": "https://storage.googleapis.com/gtv-videos-bucket/sample/images/ElephantsDream.jpg",
+      "ratio": "1282:718"
+    },
+    {
+      "link": "https://i.imgur.com/OB0y6MR.jpg",
+      "type": "image",
+      "thumbnail": "https://i.imgur.com/OB0y6MR.jpg",
+      "ratio": "1289:868"
+    }
+  ],
+  [
+    {
+      "link": "https://farm9.staticflickr.com/8505/8441256181_4e98d8bff5_z_d.jpg",
+      "type": "image",
+      "thumbnail": "https://farm9.staticflickr.com/8505/8441256181_4e98d8bff5_z_d.jpg",
+      "ratio": "640:426"
+    }
+  ]
+]
+

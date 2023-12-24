@@ -12,7 +12,6 @@ import com.nehak.instagramfeed.other.Extensions.Companion.findFirstVisibleItemPo
 import com.nehak.instagramfeed.other.Extensions.Companion.isAtTop
 import com.nehak.instagramfeed.autoPlay.VideoAutoPlayHelper
 import com.nehak.instagramfeed.databinding.FragmentFeedListBinding
-import com.nehak.instagramfeed.feedUI.adapters.FeedAdapter
 import com.nehak.instagramfeed.other.Lg
 
 /**
@@ -35,45 +34,44 @@ class FeedListFragment : Fragment() {
         return binding.root
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        /* Set adapter (items are being used inside adapter, you can setup in your own way*/
-        val feedAdapter = FeedAdapter(requireContext())
-        binding.adapter = feedAdapter
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         /*Helper class to provide AutoPlay feature inside cell*/
         val videoAutoPlayHelper =
             VideoAutoPlayHelper(recyclerView = binding.recyclerView)
+
+        /* Set adapter (items are being used inside adapter, you can setup in your own way*/
+        val feedAdapter = FeedAdapter(requireContext(),object :RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                print("neha onScrolled horizontal")
+                videoAutoPlayHelper.onScrolled(true)
+            }
+        })
+        binding.adapter = feedAdapter
+
         videoAutoPlayHelper.startObserving()
 
         /*Helper class to provide show/hide toolBar*/
         attachScrollControlListener(binding.customToolBar, binding.recyclerView)
     }
 
-
     /**
      * This method will show hide view passed as @param -toolBar
      */
     private fun attachScrollControlListener(toolBar: View?, recyclerView: RecyclerView) {
-
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
-
                 var firstVisibleItem = -1
                 try {
                     firstVisibleItem = recyclerView.findFirstVisibleItemPosition()
                 } catch (e: Exception) {
                     Lg.printStackTrace(e)
                 }
-
                 if (firstVisibleItem == -1) {
                     return
                 }
-
                 //show views if first item is first visible position and views are hidden
                 if (firstVisibleItem == 0 && recyclerView.computeVerticalScrollOffset() < hideThreshold) {
                     if (!controlsVisibleShowHide) {
@@ -92,14 +90,11 @@ class FeedListFragment : Fragment() {
                         scrolledDistance = 0
                     }
                 }
-
                 if (controlsVisibleShowHide && dy > 0 || !controlsVisibleShowHide && dy < 0) {
                     scrolledDistance += dy
                 }
-
             }
         })
-
     }
 
 
