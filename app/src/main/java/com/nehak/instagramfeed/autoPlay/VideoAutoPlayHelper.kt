@@ -3,9 +3,10 @@ package com.nehak.instagramfeed.autoPlay
 import android.graphics.Rect
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.nehak.instagramfeed.feedUI.adapters.FeedAdapter
 import com.nehak.instagramfeed.feedUI.holders.FeedViewHolder
-import com.nehak.instagramfeed.feedUI.holders.VideoFeedViewHolder
+import com.nehak.instagramfeed.feedUI.horizontal_pager.HorizontalPagerAdapter
+import com.nehak.instagramfeed.feedUI.horizontal_pager.PagerViewHolder
+import com.nehak.instagramfeed.feedUI.horizontal_pager.VideoViewHolder
 import com.nehak.instagramfeed.player.InstaLikePlayerView
 
 /**
@@ -14,16 +15,26 @@ import com.nehak.instagramfeed.player.InstaLikePlayerView
 class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
 
     private var lastPlayerView: InstaLikePlayerView? = null
-    val MIN_LIMIT_VISIBILITY =
-        20; // When playerView will be less than 20% visible than it will stop the player
+    private val minVisibilityPercentage =
+        20 // When playerView will be less than 20% visible than it will stop the player
 
-    var currentPlayingVideoItemPos = -1; // -1 indicates nothing playing
+    private var currentPlayingVideoItemPos = -1 // -1 indicates nothing playing
 
-    fun onScrolled(recyclerView: RecyclerView, feedAdapter: FeedAdapter) {
+    fun startObserving() {
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                onScrolled(false)
+            }
+        })
+    }
 
+    /**
+     * Detects the visible view and attach/detach player from it according to visibility
+     */
+    fun onScrolled(forHorizontalScroll: Boolean) {
         val firstVisiblePosition: Int = findFirstVisibleItemPosition()
         val lastVisiblePosition: Int = findLastVisibleItemPosition()
-
         val pos = getMostVisibleItem(firstVisiblePosition, lastVisiblePosition)
 
         if (pos == -1) {
@@ -32,107 +43,103 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
                 val viewHolder: RecyclerView.ViewHolder =
                     recyclerView.findViewHolderForAdapterPosition(currentPlayingVideoItemPos)!!
 
-                val currentVisibility = getVisiblePercentage(viewHolder);
-                if (currentVisibility < MIN_LIMIT_VISIBILITY) {
+                val currentVisibility = getVisiblePercentage(viewHolder)
+                if (currentVisibility < minVisibilityPercentage) {
                     lastPlayerView?.removePlayer()
                 }
-                currentPlayingVideoItemPos = -1;
+                currentPlayingVideoItemPos = -1
             }
-
-
         } else {
-
-            if (currentPlayingVideoItemPos != pos) {
-                currentPlayingVideoItemPos = pos;
-                attachVideoPlayerAt(pos);
+            if (forHorizontalScroll || currentPlayingVideoItemPos != pos) {
+                currentPlayingVideoItemPos = pos
+                attachVideoPlayerAt(pos)
             }
-
         }
-
     }
 
     private fun attachVideoPlayerAt(pos: Int) {
         val feedViewHolder: FeedViewHolder =
             (recyclerView.findViewHolderForAdapterPosition(pos) as FeedViewHolder?)!!
 
-        if(feedViewHolder is VideoFeedViewHolder) {
-            /** in case its a video**/
-            if (lastPlayerView==null || lastPlayerView != feedViewHolder.customPlayerView) {
-                feedViewHolder.customPlayerView.startPlaying()
-                // stop last player
-                lastPlayerView?.removePlayer();
-            }
-            lastPlayerView = feedViewHolder.customPlayerView;
+        if (feedViewHolder.recyclerViewHorizontal.adapter is HorizontalPagerAdapter) {
+            val layoutManager: LinearLayoutManager =
+                feedViewHolder.recyclerViewHorizontal.layoutManager as LinearLayoutManager
+            val firstVisiblePosition: Int = layoutManager.findFirstVisibleItemPosition()
+            val itemViewHolder: PagerViewHolder =
+                (feedViewHolder.recyclerViewHorizontal.findViewHolderForAdapterPosition(
+                    firstVisiblePosition
+                ) as PagerViewHolder?)!!
 
-        } else {
-            /** in case its a image**/
-            if (lastPlayerView != null) {
-                // stop last player
-                lastPlayerView?.removePlayer();
-                lastPlayerView = null
+            if (itemViewHolder is VideoViewHolder) {
+                /** In case its a video**/
+                if (lastPlayerView == null || lastPlayerView != itemViewHolder.customPlayerView) {
+                    itemViewHolder.customPlayerView.startPlaying()
+                    // stop last player
+                    lastPlayerView?.removePlayer()
+                }
+                lastPlayerView = itemViewHolder.customPlayerView
+            } else {
+                /** in case its a image**/
+                if (lastPlayerView != null) {
+                    // stop last player
+                    lastPlayerView?.removePlayer()
+                    lastPlayerView = null
+                }
             }
-
         }
+
     }
 
     private fun getMostVisibleItem(firstVisiblePosition: Int, lastVisiblePosition: Int): Int {
-
-        var maxPercentage = -1;
-        var pos = 0;
+        var maxPercentage = -1
+        var pos = 0
         for (i in firstVisiblePosition..lastVisiblePosition) {
-            val viewHolder: RecyclerView.ViewHolder =
-                recyclerView.findViewHolderForAdapterPosition(i)!!
+            val viewHolder: RecyclerView.ViewHolder? =
+                recyclerView.findViewHolderForAdapterPosition(i)
 
-            var currentPercentage = getVisiblePercentage(viewHolder);
-            if (currentPercentage > maxPercentage) {
-                maxPercentage = currentPercentage.toInt();
-                pos = i;
+            if (viewHolder != null) {
+                val currentPercentage = getVisiblePercentage(viewHolder)
+                if (currentPercentage > maxPercentage) {
+                    maxPercentage = currentPercentage.toInt()
+                    pos = i
+                }
             }
-
         }
 
-        if (maxPercentage == -1 || maxPercentage < MIN_LIMIT_VISIBILITY) {
-            return -1;
+        if (maxPercentage == -1 || maxPercentage < minVisibilityPercentage) {
+            return -1
         }
-
-        return pos;
+        return pos
     }
 
     private fun getVisiblePercentage(
         holder: RecyclerView.ViewHolder
     ): Float {
-        val rect_parent = Rect()
-        recyclerView.getGlobalVisibleRect(rect_parent)
+        val rectParent = Rect()
+        recyclerView.getGlobalVisibleRect(rectParent)
         val location = IntArray(2)
         holder.itemView.getLocationOnScreen(location)
 
-        val rect_child = Rect(
+        val rectChild = Rect(
             location[0],
             location[1],
-            location[0] + holder.itemView.getWidth(),
-            location[1] + holder.itemView.getHeight()
+            location[0] + holder.itemView.width,
+            location[1] + holder.itemView.height
         )
 
-        val rect_parent_area =
-            ((rect_child.right - rect_child.left) * (rect_child.bottom - rect_child.top)).toFloat()
-        val x_overlap = Math.max(
-            0,
-            Math.min(rect_child.right, rect_parent.right) - Math.max(
-                rect_child.left,
-                rect_parent.left
+        val rectParentArea =
+            ((rectChild.right - rectChild.left) * (rectChild.bottom - rectChild.top)).toFloat()
+        val xOverlap = 0.coerceAtLeast(
+            rectChild.right.coerceAtMost(rectParent.right) - rectChild.left.coerceAtLeast(rectParent.left)
+        ).toFloat()
+        val yOverlap = 0.coerceAtLeast(
+            rectChild.bottom.coerceAtMost(rectParent.bottom) - rectChild.top.coerceAtLeast(
+                rectParent.top
             )
         ).toFloat()
-        val y_overlap = Math.max(
-            0,
-            Math.min(rect_child.bottom, rect_parent.bottom) - Math.max(
-                rect_child.top,
-                rect_parent.top
-            )
-        ).toFloat()
-        val overlapArea = x_overlap * y_overlap
-        val percent = overlapArea / rect_parent_area * 100.0f
+        val overlapArea = xOverlap * yOverlap
 
-        return percent
+        return overlapArea / rectParentArea * 100.0f
     }
 
 
@@ -140,29 +147,13 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
         if (recyclerView.layoutManager is LinearLayoutManager) {
             return (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstVisibleItemPosition()
         }
-
         return -1
     }
 
     private fun findLastVisibleItemPosition(): Int {
-        if (recyclerView.getLayoutManager() is LinearLayoutManager) {
-            return (recyclerView.getLayoutManager() as LinearLayoutManager).findLastVisibleItemPosition()
+        if (recyclerView.layoutManager is LinearLayoutManager) {
+            return (recyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
         }
         return -1
     }
-
-    fun startObserving() {
-
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (recyclerView.adapter is FeedAdapter) {
-                    onScrolled(recyclerView, recyclerView.adapter as FeedAdapter)
-                } else {
-                    throw IllegalStateException("Adapter should be FeedAdapter or extend FeedAdapter")
-                }
-            }
-        })
-    }
-
 }
