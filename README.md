@@ -16,12 +16,12 @@ This Project will provide following things :
 See the demo here...
 
 New version (24th Dec, 2023) : 
-<img src="/demo/instagram_feed_2.gif?raw=true" width="200px"> 
+![](https://github.com/NehaKushwah993/InstagramVideoFeedClone/blob/main/demo/instagram_feed_2.gif)
 
 Older version :
-<img src="/demo/instagram_feed.gif?raw=true" width="200px"> 
+![](https://github.com/NehaKushwah993/InstagramVideoFeedClone/blob/main/demo/instagram_feed.gif)
 
-![instagram_feed](demo/sample_video.mov)
+![instagram_feed](https://github.com/NehaKushwah993/InstagramVideoFeedClone/blob/main/demo/sample_video.mov)
 
 and please let me know if you find any issue in my code...
 
