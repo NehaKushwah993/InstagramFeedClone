@@ -16,7 +16,7 @@ This Project will provide following things :
 See the demo here...
 
 New version (24th Dec, 2023) : 
-![instagram_feed](demo/instagram_feed_2.gif)
+![instagram_feed](![demo/instagram_feed_2.gif])
 
 Older version :
 ![instagram_feed](demo/instagram_feed.gif)
