@@ -16,7 +16,7 @@ This Project will provide following things :
 See the demo here...
 
 New version (24th Dec, 2023) : 
-![](/demo/image.jpg)
+![](demo/image.jpg)
 
 Older version :
 ![](https://github.com/NehaKushwah993/InstagramVideoFeedClone/blob/main/demo/instagram_feed.gif)
