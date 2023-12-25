@@ -3,6 +3,7 @@ package com.nehak.instagramfeed.feedUI
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +21,8 @@ import com.nehak.instagramfeed.other.Constants.Companion.dataList
  */
 class FeedAdapter(
     private val context: Context,
-    private val scrollListener: RecyclerView.OnScrollListener
+    private val scrollListener: RecyclerView.OnScrollListener,
+    private val onMuteClickListener: AdapterView.OnItemClickListener,
 ) :
     ListAdapter<FeedItem, FeedViewHolder>(DIFF_CALLBACK) {
 
@@ -58,7 +60,7 @@ class FeedAdapter(
         (holder.recyclerViewHorizontal.layoutParams as ConstraintLayout.LayoutParams).dimensionRatio =
             dataList[position][0].ratio
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
-        val feedAdapter = HorizontalPagerAdapter(context, position, dataList[position])
+        val feedAdapter = HorizontalPagerAdapter(context, position, dataList[position], onMuteClickListener)
         holder.recyclerViewHorizontal.adapter = feedAdapter
         holder.recyclerViewHorizontal.clearOnScrollListeners()
 
@@ -86,6 +88,7 @@ class FeedAdapter(
                 holder.binding.dots.addTab(holder.binding.dots.newTab())
             }
         }
+
     }
 
     override fun getItemCount(): Int {

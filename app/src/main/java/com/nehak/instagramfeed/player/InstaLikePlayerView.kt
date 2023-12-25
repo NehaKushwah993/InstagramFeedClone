@@ -20,6 +20,7 @@ import android.net.Uri
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout
+import androidx.lifecycle.MutableLiveData
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -39,6 +40,9 @@ class InstaLikePlayerView @JvmOverloads constructor(
 ) : FrameLayout(
     context!!, attrs, defStyleAttr
 ) {
+    companion object{
+        var isMuted: MutableLiveData<Boolean> = MutableLiveData<Boolean>(false)
+    }
     private var videoSurfaceView: View?
     private var player: ExoPlayer? = null
     private var isTouching = false
@@ -48,7 +52,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
     /**
      * Returns the player currently set on this view, or null if no player is set.
      */
-    private fun getPlayer(): ExoPlayer? {
+    fun getPlayer(): ExoPlayer? {
         return player
     }
 
@@ -147,6 +151,7 @@ class InstaLikePlayerView @JvmOverloads constructor(
         /*Setup player + Adding Cache Directory*/
         val player = ExoPlayer.Builder(context).build()
         player.repeatMode = Player.REPEAT_MODE_ALL
+        player.volume = (1f).takeIf { isMuted.value==false }?:(0f)
         player.addListener(
             object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {

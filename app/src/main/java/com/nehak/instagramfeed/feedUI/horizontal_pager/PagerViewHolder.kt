@@ -12,10 +12,11 @@ abstract class PagerViewHolder(root: View) : RecyclerView.ViewHolder(root)
 
 class ImageViewHolder(binding: ImageItemSingleBinding) : PagerViewHolder(binding.root) {
     val imageView =
-        binding.imageView;
+        binding.imageView
 }
 
 class VideoViewHolder(binding: VideoItemSingleBinding) : PagerViewHolder(binding.root) {
-    val videoThumbnail = binding.feedThumbnailView;
-    val customPlayerView = binding.feedPlayerView;
+    val videoThumbnail = binding.feedThumbnailView
+    val customPlayerView = binding.feedPlayerView
+    val muteIcon = binding.muteIcon
 }

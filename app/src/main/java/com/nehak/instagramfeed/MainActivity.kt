@@ -21,5 +21,4 @@ class MainActivity : FragmentActivity() {
         dataList = (Gson().fromJson(jsonString, listType) as List<List<FeedItem>>)
         DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
     }
-
 }
