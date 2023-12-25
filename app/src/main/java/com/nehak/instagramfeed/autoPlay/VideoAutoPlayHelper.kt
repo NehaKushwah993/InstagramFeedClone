@@ -1,6 +1,8 @@
 package com.nehak.instagramfeed.autoPlay
 
 import android.graphics.Rect
+import androidx.lifecycle.MutableLiveData
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nehak.instagramfeed.feedUI.holders.FeedViewHolder
@@ -9,10 +11,16 @@ import com.nehak.instagramfeed.feedUI.horizontal_pager.PagerViewHolder
 import com.nehak.instagramfeed.feedUI.horizontal_pager.VideoViewHolder
 import com.nehak.instagramfeed.player.InstaLikePlayerView
 
+
 /**
  * Create By Neha Kushwah
  */
 class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
+
+
+    fun getPlayer(): ExoPlayer? {
+        return lastPlayerView!!.getPlayer()
+    }
 
     private var lastPlayerView: InstaLikePlayerView? = null
     private val minVisibilityPercentage =

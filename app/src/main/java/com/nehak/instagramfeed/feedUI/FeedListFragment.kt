@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.nehak.instagramfeed.other.Extensions.Companion.findFirstVisibleItemPosition
@@ -13,6 +14,7 @@ import com.nehak.instagramfeed.other.Extensions.Companion.isAtTop
 import com.nehak.instagramfeed.autoPlay.VideoAutoPlayHelper
 import com.nehak.instagramfeed.databinding.FragmentFeedListBinding
 import com.nehak.instagramfeed.other.Lg
+import com.nehak.instagramfeed.player.InstaLikePlayerView.Companion.isMuted
 
 /**
  * Create By Neha Kushwah
@@ -47,7 +49,15 @@ class FeedListFragment : Fragment() {
                 print("neha onScrolled horizontal")
                 videoAutoPlayHelper.onScrolled(true)
             }
-        })
+        }) { _, _, _, _ -> //Mute Unmute feature
+            if ((videoAutoPlayHelper.getPlayer()?.volume == 0f)) {
+                videoAutoPlayHelper.getPlayer()?.volume = 1.0F
+                isMuted.postValue(false)
+            } else {
+                videoAutoPlayHelper.getPlayer()?.volume = 0F
+                isMuted.postValue(true)
+            }
+        }
         binding.adapter = feedAdapter
 
         videoAutoPlayHelper.startObserving()
