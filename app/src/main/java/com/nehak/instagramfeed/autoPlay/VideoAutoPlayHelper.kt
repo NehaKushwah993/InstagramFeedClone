@@ -164,4 +164,11 @@ class VideoAutoPlayHelper(var recyclerView: RecyclerView) {
         }
         return -1
     }
+
+    fun pause() {
+        lastPlayerView?.getPlayer()?.pause()
+    }
+    fun play() {
+        lastPlayerView?.getPlayer()?.play()
+    }
 }
