@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.nehak.instagramfeed.other.Extensions.Companion.findFirstVisibleItemPosition
@@ -21,6 +20,7 @@ import com.nehak.instagramfeed.player.InstaLikePlayerView.Companion.isMuted
  */
 class FeedListFragment : Fragment() {
 
+    private lateinit var videoAutoPlayHelper: VideoAutoPlayHelper
     private var controlsVisibleShowHide: Boolean = false
     private val hideThreshold = 100
     private var isHeaderAlreadyHidden = false
@@ -39,7 +39,7 @@ class FeedListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         /*Helper class to provide AutoPlay feature inside cell*/
-        val videoAutoPlayHelper =
+        videoAutoPlayHelper =
             VideoAutoPlayHelper(recyclerView = binding.recyclerView)
 
         /* Set adapter (items are being used inside adapter, you can setup in your own way*/
@@ -139,5 +139,15 @@ class FeedListFragment : Fragment() {
                 ?.setInterpolator(AccelerateInterpolator(2F))
 
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        videoAutoPlayHelper.pause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        videoAutoPlayHelper.play()
     }
 }
