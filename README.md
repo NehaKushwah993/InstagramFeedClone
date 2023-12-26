@@ -21,12 +21,3 @@ New version (24th Dec, 2023) :
 
 and please let me know if you find any issue in my code...
 
-
-
-
-
-
-
-Older version :
-
-![instagram_feed](https://github.com/NehaKushwah993/InstagramVideoFeedClone/assets/19280756/eff0c8d4-73ef-47ad-b4d3-1c4cbf316e77)
