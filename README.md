@@ -13,6 +13,9 @@ This Project will provide following things :
 - Uses remote video URLs (these are not local videos)
 
 
+#UPDATE : Use https://github.com/NehaKushwah993/Instagram-Feed-Compose for *Jetpack compose*
+
+
 See the demo here...
 
 New version (24th Dec, 2023) : 
