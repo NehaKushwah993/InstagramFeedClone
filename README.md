@@ -1,15 +1,14 @@
+
+## Update
+
+Check out the new version using Kotlin & Jetpack Compose here: [InstagramFeedCompose](https://github.com/NehaKushwah993/Instagram-Feed-Compose)
+
+
 # InstagramFeedClone
 
 Hey! Are you searching for how to play videos like Instagram, TikTok, or LinkedIn in Android?
 
 Look no further! This project provides a solution for:
-
-
-## Update
-
-Check out the new version using Jetpack Compose here: [InstagramFeedCompose](https://github.com/NehaKushwah993/Instagram-Feed-Compose)
-
-
 
 ## Features
 
